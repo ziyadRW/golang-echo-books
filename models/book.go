@@ -3,9 +3,9 @@ package models
 import "gorm.io/gorm"
 
 type Book struct {
-	gorm.model
+	gorm.Model
 
-	Title string `json: "title"`
-	Authot string `json: "author"`
-	Published int `json: "publisehd"`
+	Title		string `json:"title"`
+	Authotr 		string `json:"author"`
+	Published 	int `json:"publisehd"`
 }

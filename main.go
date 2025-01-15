@@ -1,13 +1,12 @@
 package main
 
 import (
-	"net/http"
-	"https://github.com/ziyadRW/golang-echo-books/models"
-	"https://github.com/ziyadRW/golang-echo-books/routes"
-	"github.com/labstack/echo/middleware"
 	"github.com/labstack/echo/v4"
-
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/ziyadRW/golang-echo-books/models"
+	"github.com/ziyadRW/golang-echo-books/routes"
 )
+
 
 func main() {
 	// start echo
@@ -15,7 +14,7 @@ func main() {
 
 	// middlewares
 	e.Use(middleware.Logger())
-	e.use(middleware.Recover())
+	e.Use(middleware.Recover())
 
 
 	//database 
