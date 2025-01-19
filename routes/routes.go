@@ -3,11 +3,14 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/ziyadRW/golang-echo-books/handlers"
+	"github.com/ziyadRW/golang-echo-books/models"
+	"github.com/ziyadRW/golang-echo-books/repositories"
 )
 
 func SetUpRoutes(g *echo.Group) {
 	
-	bookHandler := handlers.NewBookHandler()
+	repo := repositories.NewGormBookRepository(models.DB)
+	bookHandler := handlers.NewBookHandler(repo)
 	
 	g.GET("/books", bookHandler.GetAllBooks)
 	g.GET("/book/ :id", bookHandler.GetBook)

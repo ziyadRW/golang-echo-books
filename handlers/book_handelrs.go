@@ -4,16 +4,18 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/ziyadRW/golang-echo-books/models"
+	"github.com/labstack/gommon/log"
+	"github.com/ziyadRW/golang-echo-books/DTOs"
 	"github.com/ziyadRW/golang-echo-books/repositories"
+	"github.com/ziyadRW/golang-echo-books/utils"
 )
 
 type Bookhandler struct {
 	Repo repositories.BookReoisitory
 }
 
-func NewBookHandler(c echo.Context) *Bookhandler {
-	return &Bookhandler{}
+func NewBookHandler(repo repositories.BookReoisitory) *Bookhandler {
+	return &Bookhandler{Repo: repo}
 }
 
 func (h *Bookhandler)GetAllBooks(c echo.Context) error {
@@ -23,12 +25,25 @@ func (h *Bookhandler)GetAllBooks(c echo.Context) error {
 }
 
 func (h *Bookhandler)CreateBook(c echo.Context) error {
-	book := new(models.Book)
+	book := new(DTOs.Book)
 	if err:= c.Bind(book); err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	//validate rquest
+	validated := utils.ValidateBook(book)
+	if validated != nil {
+		log.Error(validated.Error())
+		return c.JSON(http.StatusInternalServerError, "Failed to create book")
+	}
+	//create book
+	err := h.Repo.CreateBook(book)
+	if err != nil {
+		log.Error(err.Error())
+		return c.JSON(http.StatusInternalServerError, "Failed to create book")
 	}
 	
-	return nil
+	return c.JSON(http.StatusCreated, book)
 }
 
 func (h *Bookhandler)GetBook(c echo.Context) error {
